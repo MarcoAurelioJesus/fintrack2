@@ -15,11 +15,20 @@ import {
   isTransactionEffective,
 } from '@core/utils/transaction-rules';
 import { APP_I18N } from '@core/i18n/app-labels';
+import { DevControlsComponent } from '@shared/components/dev-controls/dev-controls.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, ChartModule, DashboardSummaryComponent, SelectModule, ButtonModule, FormsModule],
+  imports: [
+    CommonModule,
+    ChartModule,
+    DashboardSummaryComponent,
+    SelectModule,
+    ButtonModule,
+    FormsModule,
+    DevControlsComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })

@@ -1,5 +1,8 @@
 <div class="dashboard-page">
   <ng-container *ngIf="stats$ | async as stats">
+    <!-- Dev Controls -->
+    <app-dev-controls></app-dev-controls>
+
     <section class="dashboard-toolbar">
       <div class="dashboard-toolbar__copy">
         <span class="dashboard-toolbar__eyebrow">{{ labels.eyebrow }}</span>

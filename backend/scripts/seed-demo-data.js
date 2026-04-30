@@ -278,6 +278,8 @@ async function main() {
   await printSummary();
 }
 
+export default main;
+
 main().catch((error) => {
   console.error('Falha ao gerar a massa demo:', error);
   process.exit(1);

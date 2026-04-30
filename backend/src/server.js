@@ -406,6 +406,30 @@ function mapTransaction(row) {
   }
   });
 
+  // Endpoints de desenvolvimento para seed e clear
+  app.post('/api/dev/clear', async (req, res) => {
+    try {
+      await execute('DELETE FROM transactions');
+      await execute('DELETE FROM categories');
+      res.json(ok({ message: 'Banco de dados limpo com sucesso' }));
+    } catch (err) {
+      const e = fail('Erro ao limpar banco de dados');
+      res.status(e.status).json(e);
+    }
+  });
+
+  app.post('/api/dev/seed', async (req, res) => {
+    try {
+      // Importa dinamicamente o script de seed
+      const seedModule = await import('../scripts/seed-demo-data.js');
+      await seedModule.default();
+      res.json(ok({ message: 'Banco de dados populado com sucesso' }));
+    } catch (err) {
+      const e = fail('Erro ao popular banco de dados', 500);
+      res.status(e.status).json(e);
+    }
+  });
+
   return app;
 }
 

@@ -1,0 +1,361 @@
+<p-toast></p-toast>
+
+<div class="transactions-page" [class.transactions-page--detail]="displayDetails">
+  <aside class="transactions-sidebar" *ngIf="!displayDetails">
+    <ng-container *ngIf="categories$ | async as categories">
+      <div class="transactions-sidebar__header">
+        <span class="transactions-sidebar__eyebrow">{{ labels.sidebarEyebrow }}</span>
+        <h2>{{ labels.sidebarTitle }}</h2>
+        <p>{{ labels.sidebarDescription }}</p>
+      </div>
+
+      <div class="transactions-sidebar__list">
+        <button
+          type="button"
+          class="transactions-sidebar__item"
+          [class.transactions-sidebar__item--active]="!filterCategoryId"
+          (click)="selectCategory(null)"
+        >
+          <span class="transactions-sidebar__item-copy">
+            <span class="transactions-sidebar__dot transactions-sidebar__dot--all"></span>
+            <span>{{ commonLabels.allCategories }}</span>
+          </span>
+          <span class="transactions-sidebar__count">{{ allTransactions.length }}</span>
+        </button>
+
+        <button
+          *ngFor="let category of categories"
+          type="button"
+          class="transactions-sidebar__item"
+          [class.transactions-sidebar__item--active]="filterCategoryId === category.id"
+          (click)="selectCategory(category.id)"
+        >
+          <span class="transactions-sidebar__item-copy">
+            <span
+              class="transactions-sidebar__dot"
+              [style.backgroundColor]="category.color"
+            ></span>
+            <span>{{ category.name }}</span>
+          </span>
+          <span class="transactions-sidebar__count">{{ getCategoryTransactionCount(category.id) }}</span>
+        </button>
+      </div>
+    </ng-container>
+  </aside>
+
+  <section class="transactions-main" [class.transactions-main--detail]="displayDetails">
+    <ng-container *ngIf="!displayDetails; else detailView">
+      <section class="transactions-toolbar">
+        <div class="transactions-toolbar__copy">
+          <span class="transactions-toolbar__eyebrow">{{ labels.toolbarEyebrow }}</span>
+          <h1>{{ labels.toolbarTitle }}</h1>
+          <p>{{ labels.toolbarDescription }}</p>
+        </div>
+
+        <button
+          pButton
+          pRipple
+          type="button"
+          (click)="openForm()"
+          icon="pi pi-plus"
+          [label]="labels.newAction"
+          class="transactions-toolbar__cta"
+        ></button>
+      </section>
+
+      <section class="transactions-panel">
+        <div class="transactions-panel__header">
+          <div>
+            <span class="transactions-panel__eyebrow">{{ labels.filtersEyebrow }}</span>
+            <h3>{{ labels.filtersTitle }}</h3>
+          </div>
+        </div>
+
+        <div class="transactions-filters">
+          <label class="transactions-filter transactions-filter--search">
+            <span>{{ labels.searchLabel }}</span>
+            <span class="transactions-search">
+              <i class="pi pi-search transactions-search__icon"></i>
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="searchText"
+                [placeholder]="labels.searchPlaceholder"
+              />
+            </span>
+          </label>
+
+          <label class="transactions-filter">
+            <span>{{ labels.typeLabel }}</span>
+            <p-select
+              [(ngModel)]="filterType"
+              [options]="typeOptions"
+              optionLabel="label"
+              optionValue="value"
+              [placeholder]="labels.typePlaceholder"
+              [showClear]="true"
+              class="transactions-filter__select"
+              (onChange)="applyFilters()"
+              (onClear)="applyFilters()"
+            ></p-select>
+          </label>
+
+          <label class="transactions-filter">
+            <span>{{ labels.statusLabel }}</span>
+            <p-select
+              [(ngModel)]="statusFilter"
+              [options]="statusOptions"
+              optionLabel="label"
+              optionValue="value"
+              class="transactions-filter__select"
+            ></p-select>
+          </label>
+
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="pi pi-filter-slash"
+            [label]="labels.clearAction"
+            class="transactions-clear"
+            (click)="clearFilters()"
+          ></button>
+        </div>
+      </section>
+
+      <section class="transactions-table-card">
+        <div class="transactions-table-card__header">
+          <div>
+            <span class="transactions-panel__eyebrow">{{ labels.tableEyebrow }}</span>
+            <h3>{{ labels.tableTitle }}</h3>
+          </div>
+        </div>
+
+        <p-table
+          [value]="visibleTransactions((transactions$ | async) ?? [])"
+          responsiveLayout="scroll"
+          [paginator]="true"
+          [rows]="8"
+          styleClass="transactions-datatable"
+          [tableStyle]="{ 'min-width': '48rem' }"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 38%">{{ labels.descriptionHeader }}</th>
+              <th style="width: 20%">{{ labels.categoryHeader }}</th>
+              <th style="width: 18%">{{ labels.valueHeader }}</th>
+              <th style="width: 16%">{{ labels.dateHeader }}</th>
+              <th style="width: 8%"></th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-transaction let-rowIndex="rowIndex">
+            <tr [class.transactions-row--alt]="rowIndex % 2 === 1">
+              <td>
+                <div class="transactions-description">
+                  <strong>{{ transaction.description }}</strong>
+                  <span *ngIf="transaction.notes">{{ transaction.notes }}</span>
+                  <small *ngIf="transaction.isScheduled">
+                    {{ labels.scheduledPrefix }} {{ formatDate(transaction.scheduledDate || transaction.date) }}
+                  </small>
+                </div>
+              </td>
+
+              <td>
+                <span class="transactions-category-pill" *ngIf="transaction.category">
+                  <span
+                    class="transactions-category-pill__dot"
+                    [style.backgroundColor]="transaction.category.color"
+                  ></span>
+                  {{ transaction.category.name }}
+                </span>
+                <span class="transactions-category-pill transactions-category-pill--empty" *ngIf="!transaction.category">
+                  {{ commonLabels.noCategory }}
+                </span>
+              </td>
+
+              <td>
+                <span
+                  class="transactions-amount-pill"
+                  [class.transactions-amount-pill--income]="transaction.type === 'entrada'"
+                  [class.transactions-amount-pill--expense]="transaction.type !== 'entrada'"
+                >
+                  {{ formatCurrency(transaction.value) }}
+                </span>
+              </td>
+
+              <td>
+                <div class="transactions-date">
+                  <strong>{{ formatDate(transaction.date) }}</strong>
+                  <span>{{ getTransactionTypeLabel(transaction.type) }}</span>
+                </div>
+              </td>
+
+              <td>
+                <div class="transactions-actions">
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-eye"
+                    class="transactions-action-button"
+                    [attr.aria-label]="commonLabels.viewAriaLabel"
+                    (click)="openDetails(transaction)"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-pencil"
+                    class="transactions-action-button"
+                    [attr.aria-label]="commonLabels.editAriaLabel"
+                    (click)="openForm(transaction)"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-trash"
+                    class="transactions-action-button transactions-action-button--danger"
+                    [attr.aria-label]="commonLabels.deleteAriaLabel"
+                    (click)="deleteTransaction(transaction)"
+                  ></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="5" class="transactions-empty">
+                {{ labels.emptyState }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </section>
+    </ng-container>
+
+    <ng-template #detailView>
+      <section *ngIf="transactionDetails as detail" class="transaction-detail">
+        <div class="transaction-detail__head">
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="pi pi-arrow-left"
+            class="transaction-detail__back"
+            [attr.aria-label]="commonLabels.backAriaLabel"
+            (click)="closeDetails()"
+          ></button>
+
+          <div class="transaction-detail__head-copy">
+            <span class="transactions-panel__eyebrow">{{ labels.detailsEyebrow }}</span>
+            <h3>{{ labels.detailsTitle }}</h3>
+          </div>
+
+          <span
+            class="transaction-detail__status"
+            [class.transaction-detail__status--scheduled]="detail.isScheduled"
+          >
+            {{ getDetailStatusLabel(detail) }}
+          </span>
+        </div>
+
+        <section class="transaction-detail__summary">
+          <div class="transaction-detail__summary-copy">
+            <span class="transaction-detail__summary-description">{{ detail.description }}</span>
+            <strong>{{ formatCurrency(detail.value) }}</strong>
+            <div class="transaction-detail__summary-meta">
+              <span>{{ formatDate(detail.date) }}</span>
+              <span>{{ detail.category?.name || commonLabels.noCategory }}</span>
+            </div>
+          </div>
+
+          <span
+            class="transaction-detail__type"
+            [class.transaction-detail__type--income]="detail.type === 'entrada'"
+            [class.transaction-detail__type--expense]="detail.type !== 'entrada'"
+          >
+            {{ getTransactionTypeLabel(detail.type) }}
+          </span>
+        </section>
+
+        <div class="transaction-detail__grid">
+          <section class="transaction-detail__card transaction-detail__card--chart">
+            <div class="transaction-detail__card-header">
+              <div>
+                <span class="transactions-panel__eyebrow">{{ labels.detailsCategoryEyebrow }}</span>
+                <h4>{{ labels.detailsCategoryTitle }}</h4>
+              </div>
+            </div>
+
+            <div class="transaction-detail__chart">
+              <div
+                *ngFor="let bar of getTransactionCategoryBars(detail)"
+                class="transaction-detail__bar"
+              >
+                <div class="transaction-detail__bar-track">
+                  <div
+                    class="transaction-detail__bar-fill"
+                    [class.transaction-detail__bar-fill--highlight]="bar.highlighted"
+                    [style.height.%]="bar.height"
+                    [style.backgroundColor]="bar.highlighted ? '#4a97ec' : '#cfe3fa'"
+                  ></div>
+                </div>
+                <span>{{ bar.label }}</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="transaction-detail__card transaction-detail__card--history">
+            <div class="transaction-detail__card-header">
+              <div>
+                <span class="transactions-panel__eyebrow">{{ labels.detailsHistoryEyebrow }}</span>
+                <h4>{{ labels.detailsHistoryTitle }}</h4>
+              </div>
+            </div>
+
+            <div class="transaction-detail__history-list">
+              <div
+                *ngFor="let item of getTransactionHistory(detail)"
+                class="transaction-detail__history-item"
+              >
+                <span>{{ item.label }}</span>
+                <strong>{{ item.value }}</strong>
+              </div>
+            </div>
+
+            <button
+              pButton
+              pRipple
+              type="button"
+              icon="pi pi-trash"
+              [label]="labels.deleteAction"
+              class="transaction-detail__delete"
+              (click)="deleteTransaction(detail)"
+            ></button>
+          </section>
+        </div>
+      </section>
+    </ng-template>
+  </section>
+
+  <p-dialog
+    [(visible)]="displayForm"
+    [modal]="true"
+    [showHeader]="false"
+    styleClass="transaction-dialog transaction-form-dialog"
+    [style]="{ width: '560px' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <app-transaction-form
+      [transaction]="selectedTransaction"
+      [categories]="categories$ | async"
+      (saved)="onTransactionSaved()"
+      (cancelled)="closeForm()"
+    ></app-transaction-form>
+  </p-dialog>
+
+</div>

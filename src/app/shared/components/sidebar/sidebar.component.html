@@ -1,0 +1,22 @@
+<header class="shell-header">
+  <div class="shell-header__brand">
+    <span class="shell-header__title">{{ labels.app.brand }}</span>
+  </div>
+
+  <nav class="shell-header__nav">
+    <a
+      *ngFor="let item of menuItems"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="shell-header__link"
+    >
+      {{ item.label }}
+    </a>
+  </nav>
+
+  <div class="shell-header__actions">
+    <span class="shell-header__accent"></span>
+    <div class="shell-header__avatar">{{ labels.app.avatarInitials }}</div>
+  </div>
+</header>

@@ -1,0 +1,46 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f3f1ea;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(77, 163, 255, 0.12), transparent 22%),
+    linear-gradient(180deg, #f7f5ef 0%, #eeebe3 100%);
+}
+
+.app-frame {
+  min-height: calc(100vh - 48px);
+  max-width: 1240px;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #4a4742;
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015) 0%, rgba(0, 0, 0, 0.08) 100%),
+    #2a2926;
+  box-shadow: 0 30px 90px rgba(17, 17, 17, 0.18);
+}
+
+.app-main {
+  min-height: calc(100vh - 132px);
+  padding: 24px 28px 32px;
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    padding: 12px;
+  }
+
+  .app-frame {
+    min-height: calc(100vh - 24px);
+    border-radius: 18px;
+  }
+
+  .app-main {
+    padding: 18px 16px 24px;
+  }
+}

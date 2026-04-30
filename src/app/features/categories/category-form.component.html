@@ -1,0 +1,115 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="category-form">
+  <div class="category-form__frame">
+    <div class="category-form__head">
+      <div class="category-form__marker" aria-hidden="true"></div>
+
+      <label class="category-form__favorite" [attr.aria-label]="labels.favoriteAriaLabel">
+        <input type="checkbox" formControlName="isFavorite" />
+        <span></span>
+      </label>
+    </div>
+
+    <div class="category-form__section">
+      <label for="name" class="category-form__label">{{ labels.nameLabel }}</label>
+      <input
+        pInputText
+        id="name"
+        type="text"
+        formControlName="name"
+        [placeholder]="labels.namePlaceholder"
+        class="category-form__input"
+        [ngClass]="{ 'category-form__input--invalid': isFieldInvalid('name') }"
+      />
+      <div *ngIf="isFieldInvalid('name')" class="category-form__error-bar"></div>
+    </div>
+
+    <div class="category-form__section">
+      <label for="color" class="category-form__label">{{ labels.colorLabel }}</label>
+      <input
+        pInputText
+        id="color"
+        type="text"
+        formControlName="color"
+        [placeholder]="labels.colorPlaceholder"
+        class="category-form__input"
+      />
+    </div>
+
+    <div class="category-form__grid">
+      <div class="category-form__section">
+        <label class="category-form__label">{{ labels.sampleLabel }}</label>
+        <div class="category-form__sample">
+          <span
+            class="category-form__sample-color"
+            [style.backgroundColor]="form.get('color')?.value"
+          ></span>
+          <input
+            pInputText
+            type="text"
+            [value]="form.get('color')?.value"
+            readonly
+            class="category-form__input category-form__input--compact"
+          />
+        </div>
+      </div>
+
+      <div class="category-form__section">
+        <label class="category-form__label">{{ labels.paletteLabel }}</label>
+        <div class="category-form__palette-grid">
+          <button
+            *ngFor="let color of presetColors"
+            type="button"
+            class="category-form__palette-tile"
+            [class.category-form__palette-tile--active]="form.get('color')?.value === color"
+            [style.backgroundColor]="color"
+            (click)="selectPresetColor(color)"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-form__swatches">
+      <button
+        *ngFor="let color of presetColors"
+        type="button"
+        class="category-form__swatch"
+        [class.category-form__swatch--active]="form.get('color')?.value === color"
+        [style.backgroundColor]="color"
+        (click)="selectPresetColor(color)"
+      ></button>
+    </div>
+
+    <div class="category-form__preview">
+      <div
+        class="category-form__preview-icon"
+        [style.backgroundColor]="form.get('color')?.value"
+      ></div>
+
+      <div class="category-form__preview-copy">
+        <strong>{{ getPreviewName() }}</strong>
+        <span>{{ form.get('color')?.value }}</span>
+      </div>
+    </div>
+
+    <div class="category-form__actions">
+      <button
+        type="button"
+        pButton
+        pRipple
+        icon="pi pi-times"
+        class="category-form__cancel"
+        [attr.aria-label]="commonLabels.cancelAriaLabel"
+        (click)="onCancel()"
+      ></button>
+
+      <button
+        type="submit"
+        pButton
+        pRipple
+        [loading]="isLoading"
+        [label]="category ? labels.updateAction : labels.createAction"
+        class="category-form__submit"
+      ></button>
+    </div>
+  </div>
+</form>

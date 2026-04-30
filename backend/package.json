@@ -1,0 +1,23 @@
+{
+  "name": "fintrack-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "node scripts/download-h2.js",
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "seed:demo": "node scripts/seed-demo-data.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "pg": "^8.16.3",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.0.0",
+    "vitest": "^2.1.8"
+  }
+}

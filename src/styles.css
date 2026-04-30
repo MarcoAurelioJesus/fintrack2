@@ -1,0 +1,172 @@
+@import 'primeicons/primeicons.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(15, 23, 42);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(51, 65, 85);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(71, 85, 105);
+}
+
+/* Custom color utilities */
+.text-positive {
+  @apply text-success-500;
+}
+
+.text-negative {
+  @apply text-danger-500;
+}
+
+.bg-positive {
+  @apply bg-success-500;
+}
+
+.bg-negative {
+  @apply bg-danger-500;
+}
+
+/* Card styles */
+.card {
+  @apply bg-slate-900 rounded-lg p-4 border border-slate-800;
+}
+
+.card-sm {
+  @apply card p-3;
+}
+
+.card-lg {
+  @apply card p-6;
+}
+
+/* Button enhancements */
+.p-button {
+  @apply transition-all duration-200;
+  gap: 0.55rem;
+  padding-inline: 1rem;
+}
+
+.p-button:not(:disabled):hover {
+  @apply -translate-y-0.5;
+}
+
+.p-button .p-button-label {
+  line-height: 1.2;
+}
+
+.p-button.p-button-sm {
+  padding-inline: 0.9rem;
+}
+
+.p-button.p-button-icon-only,
+.p-button.p-button-rounded.p-button-text {
+  padding-inline: 0;
+}
+
+/* Form enhancements */
+.p-inputtext,
+.p-select,
+.p-datepicker {
+  @apply bg-slate-800 border-slate-700 text-slate-100;
+}
+
+.p-inputtext:focus,
+.p-select:focus,
+.p-datepicker:focus {
+  @apply border-primary-500 shadow-lg shadow-primary-500/20;
+}
+
+/* PrimeNG overlay surfaces */
+.p-select-overlay,
+.p-datepicker-panel,
+.p-overlay .p-overlay-content {
+  background: #242320 !important;
+  border: 1px solid #3f3d39 !important;
+  color: #ece8df !important;
+  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.34) !important;
+  backdrop-filter: none !important;
+}
+
+.p-select-header,
+.p-datepicker-header {
+  background: #242320 !important;
+  border-bottom: 1px solid #353330 !important;
+  color: #ece8df !important;
+}
+
+.p-select-list-container,
+.p-select-list,
+.p-datepicker-calendar-container,
+.p-datepicker-calendar {
+  background: #242320 !important;
+}
+
+.p-select-option {
+  background: #242320 !important;
+  color: #ece8df !important;
+}
+
+.p-select-option:not(.p-disabled):hover,
+.p-select-option.p-focus {
+  background: #2e2c28 !important;
+  color: #f7f4ee !important;
+}
+
+.p-select-option.p-select-option-selected {
+  background: rgba(74, 151, 236, 0.18) !important;
+  color: #dceaff !important;
+}
+
+.p-select-filter,
+.p-datepicker-select-month,
+.p-datepicker-select-year {
+  background: #2a2825 !important;
+  border: 1px solid #403d38 !important;
+  color: #ece8df !important;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .card {
+    @apply p-3;
+  }
+}
+
+/* Transaction dialog global styling */
+.transaction-dialog .p-dialog-header,
+.transaction-dialog .p-dialog-content,
+.transaction-dialog .p-dialog-footer {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.transaction-dialog .p-dialog-header {
+  border-bottom: 1px solid #1e293b;
+}
+
+.transaction-dialog .p-dialog-content {
+  border-top: 1px solid #1e293b;
+}

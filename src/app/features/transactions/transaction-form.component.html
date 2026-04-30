@@ -1,0 +1,158 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="transaction-form">
+  <div class="transaction-form__frame">
+    <div class="transaction-form__marker" aria-hidden="true"></div>
+
+    <div class="transaction-form__section">
+      <label for="description" class="transaction-form__label">{{ labels.descriptionLabel }}</label>
+      <input
+        pInputText
+        id="description"
+        type="text"
+        formControlName="description"
+        [placeholder]="labels.descriptionPlaceholder"
+        class="transaction-form__input"
+        [ngClass]="{ 'transaction-form__input--invalid': isFieldInvalid('description') }"
+      />
+      <p *ngIf="isFieldInvalid('description')" class="transaction-form__error">
+        {{ getErrorMessage('description') }}
+      </p>
+    </div>
+
+    <div class="transaction-form__grid">
+      <div class="transaction-form__section">
+        <label for="value" class="transaction-form__label">{{ labels.valueLabel }}</label>
+        <p-inputNumber
+          id="value"
+          formControlName="value"
+          [showButtons]="false"
+          [min]="0.01"
+          [max]="999999"
+          [locale]="locale"
+          [placeholder]="labels.valuePlaceholder"
+          class="transaction-form__control transaction-form__control--number"
+        ></p-inputNumber>
+        <p *ngIf="isFieldInvalid('value')" class="transaction-form__error">
+          {{ getErrorMessage('value') }}
+        </p>
+      </div>
+
+      <div class="transaction-form__section">
+        <label for="type" class="transaction-form__label">{{ labels.typeLabel }}</label>
+        <p-select
+          id="type"
+          formControlName="type"
+          [options]="typeOptions"
+          optionLabel="label"
+          optionValue="value"
+          [placeholder]="commonLabels.selectPlaceholder"
+          class="transaction-form__control transaction-form__control--select"
+        ></p-select>
+        <p *ngIf="isFieldInvalid('type')" class="transaction-form__error">
+          {{ getErrorMessage('type') }}
+        </p>
+      </div>
+
+      <div class="transaction-form__section">
+        <label for="categoryId" class="transaction-form__label">{{ labels.categoryLabel }}</label>
+        <p-select
+          id="categoryId"
+          formControlName="categoryId"
+          [options]="categories"
+          optionLabel="name"
+          optionValue="id"
+          [placeholder]="commonLabels.selectPlaceholder"
+          class="transaction-form__control transaction-form__control--select"
+        ></p-select>
+        <p *ngIf="isFieldInvalid('categoryId')" class="transaction-form__error">
+          {{ getErrorMessage('categoryId') }}
+        </p>
+      </div>
+
+      <div class="transaction-form__section">
+        <label for="date" class="transaction-form__label">{{ labels.dateLabel }}</label>
+        <p-datepicker
+          id="date"
+          formControlName="date"
+          dateFormat="dd/mm/yy"
+          [placeholder]="commonLabels.selectPlaceholder"
+          class="transaction-form__control transaction-form__control--date"
+        ></p-datepicker>
+        <p *ngIf="isFieldInvalid('date')" class="transaction-form__error">
+          {{ getErrorMessage('date') }}
+        </p>
+      </div>
+    </div>
+
+    <div class="transaction-form__options">
+      <label for="isScheduled" class="transaction-form__checkbox">
+        <p-checkbox
+          [binary]="true"
+          formControlName="isScheduled"
+          inputId="isScheduled"
+        ></p-checkbox>
+        <span>{{ labels.scheduleToggle }}</span>
+      </label>
+
+      <button
+        type="button"
+        class="transaction-form__toggle"
+        (click)="toggleAdvanced()"
+      >
+        {{ showAdvanced ? labels.hideDetailsAction : labels.moreFieldsAction }}
+      </button>
+    </div>
+
+    <div
+      *ngIf="showAdvanced || form.get('isScheduled')?.value"
+      class="transaction-form__advanced"
+    >
+      <div class="transaction-form__grid transaction-form__grid--advanced">
+        <div class="transaction-form__section" *ngIf="form.get('isScheduled')?.value">
+          <label for="scheduledDate" class="transaction-form__label">{{ labels.scheduledDateLabel }}</label>
+          <p-datepicker
+            id="scheduledDate"
+            formControlName="scheduledDate"
+            dateFormat="dd/mm/yy"
+            [placeholder]="commonLabels.selectPlaceholder"
+            class="transaction-form__control transaction-form__control--date"
+          ></p-datepicker>
+          <p *ngIf="isFieldInvalid('scheduledDate')" class="transaction-form__error">
+            {{ getErrorMessage('scheduledDate') }}
+          </p>
+        </div>
+
+        <div class="transaction-form__section transaction-form__section--wide">
+          <label for="notes" class="transaction-form__label">{{ labels.notesLabel }}</label>
+          <textarea
+            id="notes"
+            formControlName="notes"
+            rows="3"
+            [placeholder]="labels.notesPlaceholder"
+            class="transaction-form__textarea"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="transaction-form__actions">
+      <button
+        type="button"
+        pButton
+        pRipple
+        icon="pi pi-times"
+        class="transaction-form__cancel"
+        [attr.aria-label]="commonLabels.cancelAriaLabel"
+        (click)="onCancel()"
+      ></button>
+
+      <button
+        type="submit"
+        pButton
+        pRipple
+        [loading]="isLoading"
+        [label]="transaction ? labels.updateAction : labels.saveAction"
+        class="transaction-form__submit"
+      ></button>
+    </div>
+  </div>
+</form>

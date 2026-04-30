@@ -1,0 +1,78 @@
+:host {
+  display: block;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.summary-card {
+  position: relative;
+  min-height: 138px;
+  padding: 18px 18px 16px;
+  overflow: hidden;
+  border: 1px solid #3a3835;
+  border-radius: 14px;
+  background: rgba(34, 33, 31, 0.92);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.summary-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: #69aef7;
+}
+
+.summary-card--income::before {
+  background: #c5df8e;
+}
+
+.summary-card--expense::before {
+  background: #f0939d;
+}
+
+.summary-card.text-success-500::before {
+  background: #69aef7;
+}
+
+.summary-card.text-danger-500::before {
+  background: #db717c;
+}
+
+.summary-card__label {
+  display: inline-flex;
+  color: #a6a095;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.summary-card__value {
+  display: block;
+  margin-top: 18px;
+  color: #f7f6f2;
+  font-size: clamp(1.5rem, 1vw + 1.2rem, 2.1rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.summary-card__meta {
+  display: block;
+  margin-top: 10px;
+  color: #aaa49a;
+  font-size: 0.84rem;
+}
+
+@media (max-width: 960px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}

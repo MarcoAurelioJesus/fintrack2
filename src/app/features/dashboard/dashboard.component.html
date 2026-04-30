@@ -1,0 +1,92 @@
+<div class="dashboard-page">
+  <ng-container *ngIf="stats$ | async as stats">
+    <section class="dashboard-toolbar">
+      <div class="dashboard-toolbar__copy">
+        <span class="dashboard-toolbar__eyebrow">{{ labels.eyebrow }}</span>
+        <h1>{{ labels.title }}</h1>
+        <p>{{ labels.description }}</p>
+      </div>
+
+      <div class="dashboard-toolbar__actions">
+        <label class="dashboard-filter">
+          <span>{{ labels.categoryFilterLabel }}</span>
+          <p-select
+            [(ngModel)]="selectedCategoryId"
+            [options]="categoryOptions"
+            optionLabel="name"
+            optionValue="id"
+            [placeholder]="labels.categoryFilterPlaceholder"
+            [showClear]="true"
+            class="dashboard-filter__control"
+            (onChange)="onCategoryFilterChange()"
+            (onClear)="onCategoryFilterChange()"
+          ></p-select>
+        </label>
+
+        <button
+          pButton
+          pRipple
+          type="button"
+          (click)="refreshStats()"
+          [loading]="isLoading"
+          icon="pi pi-refresh"
+          [label]="labels.refreshAction"
+          class="dashboard-refresh"
+        ></button>
+      </div>
+    </section>
+
+    <app-dashboard-summary [stats]="stats" [isLoading]="isLoading"></app-dashboard-summary>
+
+    <section class="dashboard-chart">
+      <div class="dashboard-chart__header">
+        <div>
+          <span class="dashboard-chart__eyebrow">{{ labels.chartEyebrow }}</span>
+          <h3>{{ labels.chartTitle }}</h3>
+        </div>
+      </div>
+
+      <p-chart
+        type="bar"
+        [data]="chartData"
+        [options]="chartOptions"
+        [style]="{ height: '320px' }"
+      ></p-chart>
+    </section>
+
+    <section class="dashboard-distribution">
+      <div class="dashboard-distribution__header">
+        <div>
+          <span class="dashboard-chart__eyebrow">{{ labels.distributionEyebrow }}</span>
+          <h3>{{ labels.distributionTitle }}</h3>
+        </div>
+      </div>
+
+      <div *ngIf="stats.byCategory.length > 0" class="dashboard-distribution__list">
+        <div *ngFor="let category of stats.byCategory" class="dashboard-distribution__item">
+          <div
+            [style.backgroundColor]="category.categoryColor"
+            class="dashboard-distribution__dot"
+          ></div>
+          <div class="dashboard-distribution__content">
+            <div class="dashboard-distribution__row">
+              <span>{{ category.categoryName }}</span>
+              <strong>{{ formatCurrency(category.total) }}</strong>
+            </div>
+            <div class="dashboard-distribution__track">
+              <div
+                [style.width.%]="category.percentage"
+                [style.backgroundColor]="category.categoryColor"
+                class="dashboard-distribution__fill"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="stats.byCategory.length === 0" class="dashboard-distribution__empty">
+        {{ labels.distributionEmpty }}
+      </div>
+    </section>
+  </ng-container>
+</div>

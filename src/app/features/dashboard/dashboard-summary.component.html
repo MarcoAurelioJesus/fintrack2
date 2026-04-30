@@ -1,0 +1,21 @@
+<div class="summary-grid">
+  <article [ngClass]="getBalanceClass(stats.currentBalance)" class="summary-card summary-card--balance">
+    <span class="summary-card__label">{{ labels.currentBalance }}</span>
+    <strong class="summary-card__value">{{ formatCurrency(stats.currentBalance) }}</strong>
+    <span class="summary-card__meta">
+      {{ stats.currentBalance >= 0 ? labels.balancePositive : labels.balanceNegative }}
+    </span>
+  </article>
+
+  <article class="summary-card summary-card--income">
+    <span class="summary-card__label">{{ labels.monthlyIncome }}</span>
+    <strong class="summary-card__value">{{ formatCurrency(stats.monthlyIncome) }}</strong>
+    <span class="summary-card__meta">{{ stats.incomeCount }} {{ labels.transactionsInMonthSuffix }}</span>
+  </article>
+
+  <article class="summary-card summary-card--expense">
+    <span class="summary-card__label">{{ labels.monthlyExpense }}</span>
+    <strong class="summary-card__value">{{ formatCurrency(stats.monthlyExpense) }}</strong>
+    <span class="summary-card__meta">{{ stats.expenseCount }} {{ labels.transactionsInMonthSuffix }}</span>
+  </article>
+</div>

@@ -1,0 +1,152 @@
+<p-toast></p-toast>
+
+<div class="p-6 space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <h2 class="text-3xl font-bold">{{ labels.title }}</h2>
+    <button 
+      pButton 
+      pRipple 
+      (click)="openForm()" 
+      icon="pi pi-plus" 
+      [label]="labels.newAction" 
+      class="p-button-success"
+    ></button>
+  </div>
+
+  <!-- Favorites Section -->
+  <div *ngIf="(categories$ | async) as categories">
+    <div *ngIf="favoriteCategories(categories).length > 0" class="space-y-4">
+      <h3 class="text-lg font-semibold text-slate-300 flex items-center gap-2">
+        <i class="pi pi-star-fill text-yellow-400"></i>
+        {{ labels.favoritesTitle }}
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          *ngFor="let category of favoriteCategories(categories)"
+          class="card-lg"
+          [style.border-left]="'8px solid ' + category.color"
+        >
+          <div class="flex items-start justify-between">
+            <div class="flex-1">
+              <h4 class="text-lg font-semibold">{{ category.name }}</h4>
+              <div class="mt-2 w-8 h-8 rounded-full" [style.backgroundColor]="category.color"></div>
+            </div>
+            <button
+              pButton
+              pRipple
+              (click)="toggleFavorite(category)"
+              icon="pi pi-star-fill"
+              [attr.aria-label]="getFavoriteToggleAriaLabel(category)"
+              class="p-button-rounded p-button-text text-yellow-400 hover:text-yellow-300"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Section -->
+  <div class="card-lg">
+    <div class="flex gap-4 items-center">
+      <i class="pi pi-search text-slate-400"></i>
+      <input
+        pInputText
+        [(ngModel)]="searchText"
+        type="text"
+        [placeholder]="labels.searchPlaceholder"
+        class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-slate-100"
+      />
+      <button
+        pButton
+        pRipple
+        (click)="searchText = ''"
+        icon="pi pi-times"
+        class="p-button-rounded p-button-text text-slate-400 hover:text-slate-200"
+        *ngIf="searchText"
+      ></button>
+    </div>
+  </div>
+
+  <!-- All Categories Section -->
+  <div *ngIf="(categories$ | async) as categories">
+    <h3 class="text-lg font-semibold text-slate-300 mb-4">{{ labels.allTitle }}</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div
+        *ngFor="let category of nonFavoriteCategories(categories)"
+        class="card-lg hover:shadow-lg transition-shadow"
+        [style.border-left]="'8px solid ' + category.color"
+      >
+        <div class="space-y-4">
+          <div class="flex items-start justify-between">
+            <div class="flex-1">
+              <h4 class="text-lg font-semibold">{{ category.name }}</h4>
+              <div class="mt-2 w-8 h-8 rounded-full" [style.backgroundColor]="category.color"></div>
+            </div>
+            <button
+              pButton
+              pRipple
+              (click)="toggleFavorite(category)"
+              icon="pi pi-star"
+              [attr.aria-label]="getFavoriteToggleAriaLabel(category)"
+              class="p-button-rounded p-button-text text-slate-400 hover:text-yellow-400 transition-colors"
+            ></button>
+          </div>
+
+          <div class="flex gap-2 pt-4 border-t border-slate-800">
+            <button
+              pButton
+              pRipple
+              (click)="openForm(category)"
+              icon="pi pi-pencil"
+              [label]="labels.editAction"
+              class="p-button-sm p-button-primary flex-1"
+            ></button>
+            <button
+              pButton
+              pRipple
+              (click)="deleteCategory(category)"
+              icon="pi pi-trash"
+              [label]="labels.deleteAction"
+              class="p-button-sm p-button-danger"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredCategories(categories).length === 0" class="card-lg text-center py-12">
+      <i class="pi pi-inbox text-4xl text-slate-600 mb-4"></i>
+      <p class="text-slate-400">
+        {{ searchText ? labels.emptySearch : labels.emptyDefault }}
+      </p>
+      <button
+        *ngIf="!searchText"
+        pButton
+        pRipple
+        (click)="openForm()"
+        [label]="labels.createAction"
+        icon="pi pi-plus"
+        class="p-button-primary mt-4"
+      ></button>
+    </div>
+  </div>
+
+  <!-- Form Modal -->
+  <p-dialog
+    [(visible)]="displayForm"
+    [modal]="true"
+    [showHeader]="false"
+    styleClass="category-form-dialog"
+    [style]="{ width: '540px' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <app-category-form
+      [category]="selectedCategory"
+      (saved)="onCategorySaved()"
+      (cancelled)="closeForm()"
+    ></app-category-form>
+  </p-dialog>
+</div>

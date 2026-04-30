@@ -1,4 +1,4 @@
-# FinTrack - Financial Management Application
+# fintrack - Financial Management Application
 
 ## Project Overview
 Modern Angular financial management application with Dashboard, Transactions, and Categories management. Built with Angular 20+, PrimeNG 20+, and Tailwind CSS following SOLID principles and clean architecture.

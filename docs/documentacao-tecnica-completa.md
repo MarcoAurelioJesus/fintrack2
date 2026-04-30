@@ -1,4 +1,4 @@
-# Documentacao tecnica completa do FinTrack
+# Documentacao tecnica completa do fintrack
 
 ## 1. Objetivo desta documentacao
 
@@ -15,9 +15,9 @@ Este codigo tem perfil de teste tecnico para vaga, entao a documentacao tambem f
 
 ---
 
-## 2. O que e o FinTrack
+## 2. O que e o fintrack
 
-O FinTrack e uma aplicacao full stack de controle financeiro pessoal.
+O fintrack e uma aplicacao full stack de controle financeiro pessoal.
 
 Ela foi dividida em tres modulos principais:
 
@@ -151,7 +151,7 @@ Essa duplicacao funciona para o escopo do teste, mas em um projeto maior seria m
 ## 6. Estrutura do repositorio
 
 ```text
-FRONT/
+fintrack/
 |-- backend/
 |   |-- data/
 |   |-- lib/

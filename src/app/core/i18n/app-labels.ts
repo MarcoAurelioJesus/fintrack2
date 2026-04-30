@@ -2,7 +2,7 @@ export const APP_I18N = {
   locale: 'pt-BR',
   currency: 'BRL',
   app: {
-    brand: 'FinTrack',
+    brand: 'fintrack',
     avatarInitials: 'JD',
   },
   navigation: {

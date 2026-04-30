@@ -5,6 +5,6 @@ describe('AppComponent', () => {
   it('exposes the application title', () => {
     const component = new AppComponent();
 
-    expect(component.title).toBe('FinTrack');
+    expect(component.title).toBe('fintrack');
   });
 });
